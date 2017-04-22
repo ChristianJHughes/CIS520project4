@@ -21,26 +21,30 @@ void readToMemory()
 	//char const* const fileName = "../../../../../scratch/dan/wiki.1Mshort";
 	char *fileName = "../../wiki.50short";
     FILE* file = fopen(fileName, "r"); /* should check the result */
-    char line[WIKI_STRING_SIZE];
+    char line_wiki[WIKI_STRING_SIZE];
     line_num = 0;
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line_wiki, sizeof(line_wiki), file)) {
     	//printf("%d\n", line_num);
-        strcpy(wiki_array[line_num], line);
+        strcpy(wiki_array[line_num], line_wiki);
         line_num++;
     }
     fclose(file);
 
+    printf("Load Memory: %s, %d\n", fileName, line_num);
+
     /* Read the words list to memory line by line. */
-    fileName = "../../words_4-8chars_50k";
+    fileName = "../../words_4-8chars75";
     file = fopen(fileName, "r"); /* should check the result */
-    char line[WORDS_STRING_SIZE];
+    char line_words[WORDS_STRING_SIZE];
     line_num = 0;
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line_words, sizeof(line_words), file)) {
     	//printf("%d\n", line_num);
-        strcpy(words_array[line_num], line);
+        strcpy(words_array[line_num], line_words);
         line_num++;
     }
     fclose(file);
+
+    printf("Load Memory: %s, %d\n", fileName, line_num);
 }
 
 
