@@ -15,10 +15,10 @@ struct timeval t1, t2;
 double elapsedTime;
 int numSlots, line_num, myVersion = 1;
 
-void readToMemory()
+void read_to_memory()
 {
 	/* Read the Wiki article to memory line by line. */
-	//char const* const fileName = "../../../../../scratch/dan/wiki.1Mshort";
+	//char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
 	char *fileName = "../../wiki.50short";
     FILE* file = fopen(fileName, "r"); /* should check the result */
     char line_wiki[WIKI_STRING_SIZE];
@@ -33,6 +33,7 @@ void readToMemory()
     printf("Load Memory: %s, %d\n", fileName, line_num);
 
     /* Read the words list to memory line by line. */
+    //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
     fileName = "../../words_4-8chars75";
     file = fopen(fileName, "r"); /* should check the result */
     char line_words[WORDS_STRING_SIZE];
@@ -44,7 +45,22 @@ void readToMemory()
     }
     fclose(file);
 
+    for(int i = 0; i < WORDS_ARRAY_SIZE; i++){
+    	printf("%s\n", words_array[i]);
+    }
+
     printf("Load Memory: %s, %d\n", fileName, line_num);
+}
+
+void find_word_in_wiki()
+{
+	// for(int i = 0; i < WIKI_ARRAY_SIZE; i++){
+	// 	for(int j = 0; j < WORDS_ARRAY_SIZE; j++){
+	// 		if(strstr(wiki_array[i], words_array[j]) != NULL) {
+	// 			printf("%s, %d\n", words_array[j], i);
+	// 		}
+	// 	}
+	// }
 }
 
 
@@ -112,7 +128,8 @@ int main() {
 
 	//DO PROCESSING HERE
 	//init_arrays();
-	readToMemory();
+	read_to_memory();
+	find_word_in_wiki();
 	//count_array();
 	//print_results();
 
