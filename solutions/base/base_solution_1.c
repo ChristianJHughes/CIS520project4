@@ -17,24 +17,29 @@ int numSlots, line_num, myVersion = 1;
 
 void readToMemory()
 {
+	/* Read the Wiki article to memory line by line. */
 	//char const* const fileName = "../../../../../scratch/dan/wiki.1Mshort";
-	char const* const fileName = "../../wiki.50short";
+	char *fileName = "../../wiki.50short";
     FILE* file = fopen(fileName, "r"); /* should check the result */
     char line[WIKI_STRING_SIZE];
     line_num = 0;
-    puts("here");
     while (fgets(line, sizeof(line), file)) {
-    	puts("here");
-        /* note that fgets don't strip the terminating \n, checking its
-           presence would allow to handle lines longer that sizeof(line) */
-    	printf("%d,\t%s\n", line_num, line);
+    	//printf("%d\n", line_num);
         strcpy(wiki_array[line_num], line);
         line_num++;
     }
-    puts("here2");
-    /* may check feof here to make a difference between eof and io failure -- network
-       timeout for instance */
+    fclose(file);
 
+    /* Read the words list to memory line by line. */
+    fileName = "../../words_4-8chars_50k";
+    file = fopen(fileName, "r"); /* should check the result */
+    char line[WORDS_STRING_SIZE];
+    line_num = 0;
+    while (fgets(line, sizeof(line), file)) {
+    	//printf("%d\n", line_num);
+        strcpy(words_array[line_num], line);
+        line_num++;
+    }
     fclose(file);
 }
 
