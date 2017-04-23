@@ -17,15 +17,19 @@ int numSlots, line_num, myVersion = 1;
 
 void read_to_memory()
 {
-	/* Read the Wiki article to memory line by line. */
-	//char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
-	char *fileName = "../../wiki.50short";
+    /* Read the Wiki article to memory line by line. */
+    //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
+    char *fileName = "../../wiki.50short";
     FILE* file = fopen(fileName, "r"); /* should check the result */
-    char line_wiki[WIKI_STRING_SIZE];
-    line_num = 0;
-    while (fgets(line_wiki, sizeof(line_wiki), file)) {
-    	//printf("%d\n", line_num);
-        strcpy(wiki_array[line_num], line_wiki);
+
+    if(file == NULL) {
+      printf("fail");
+      return;
+    }
+    int line_num = 0;
+    char * line = malloc(WIKI_STRING_SIZE);
+    while(fgets(line, WIKI_STRING_SIZE, file) != NULL) {
+        strcpy(wiki_array[line_num], line);
         line_num++;
     }
     fclose(file);
@@ -36,31 +40,36 @@ void read_to_memory()
     //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
     fileName = "../../words_4-8chars75";
     file = fopen(fileName, "r"); /* should check the result */
-    char line_words[WORDS_STRING_SIZE];
+    if(file == NULL) {
+      printf("fail2");
+      return;
+    }
+
     line_num = 0;
-    while (fgets(line_words, sizeof(line_words), file)) {
-    	//printf("%d\n", line_num);
-        strcpy(words_array[line_num], line_words);
+    line = malloc(WORDS_STRING_SIZE);
+    while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
+        strcpy(words_array[line_num], line);
+	printf("%s\n", words_array[line_num]);
         line_num++;
     }
     fclose(file);
 
-    for(int i = 0; i < WORDS_ARRAY_SIZE; i++){
-    	printf("%s\n", words_array[i]);
-    }
+    if(line)
+      free(line);
 
     printf("Load Memory: %s, %d\n", fileName, line_num);
 }
 
 void find_word_in_wiki()
 {
-	// for(int i = 0; i < WIKI_ARRAY_SIZE; i++){
-	// 	for(int j = 0; j < WORDS_ARRAY_SIZE; j++){
-	// 		if(strstr(wiki_array[i], words_array[j]) != NULL) {
-	// 			printf("%s, %d\n", words_array[j], i);
-	// 		}
-	// 	}
-	// }
+  int i, j;
+  for(i = 0; i < WIKI_ARRAY_SIZE; i++){
+    for(j = 0; j < WORDS_ARRAY_SIZE; j++){
+      if(strstr(wiki_array[i], words_array[j]) != NULL) {
+  	printf("%s, %d\n", words_array[j], i);
+      }
+    }
+  }
 }
 
 
