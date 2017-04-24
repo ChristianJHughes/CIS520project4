@@ -3,87 +3,100 @@
 #include <string.h>
 #include <sys/time.h>
 
-#define WIKI_ARRAY_SIZE 50 /* Should be 1000000 */
-#define WIKI_STRING_SIZE 2003
-#define WORDS_ARRAY_SIZE 75 /* Should be 50000 */
-#define WORDS_STRING_SIZE 10
+#define WIKI_ARRAY_SIZE 50 /* The number of wiki entries. Should be 1000000 for production. */
+#define WIKI_STRING_SIZE 2003 /* The number of characters in each wiki entry. Must account for newline and terminating characters. */
+#define WORDS_ARRAY_SIZE 75 /* The number of words being searched for in each wiki entry. Should be 50000 for production. */
+#define WORDS_STRING_SIZE 11 /* The number of characters taken up by a word. Must account for newline and terminating characters. */
 
+/* All of the wiki entries. */
 char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
+
+/* All of the words being searched for. */
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
+/* For measuring performance. */
 struct timeval t1, t2;
 double elapsedTime;
 int numSlots, line_num, myVersion = 1;
 
+/* Read all of the wiki entries and words into local data structures from thier resprctive files. */
 void read_to_memory()
 {
-    /* Read the Wiki article to memory line by line. */
-    //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
-    char *fileName = "../../wiki.50short";
-    FILE* file = fopen(fileName, "r"); /* should check the result */
+  /* Read the wiki article into memory line by line. */
+  //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
+  char *fileName = "../../wiki.50short";
+  FILE* file = fopen(fileName, "r"); /* should check the result */
 
-    if(file == NULL) {
-      printf("fail");
-      return;
-    }
-    int line_num = 0;
-    char * line = malloc(WIKI_STRING_SIZE);
-    while(fgets(line, WIKI_STRING_SIZE, file) != NULL) {
-        strcpy(wiki_array[line_num], line);
-        line_num++;
-    }
-    fclose(file);
-    free(line);
-    printf("Load Memory: %s, %d\n", fileName, line_num);
+  if(file == NULL) {
+    printf("fail");
+    return;
+  }
 
-    /* Read the words list to memory line by line. */
-    //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
-    fileName = "../../words_4-8chars75";
-    file = fopen(fileName, "r"); /* should check the result */
-    if(file == NULL) {
-      printf("fail2");
-      return;
-    }
+  /* Read each wiki line into memory. */
+  int line_num = 0;
+  char * line = malloc(WIKI_STRING_SIZE);
+  while(fgets(line, WIKI_STRING_SIZE, file) != NULL) {
+      strcpy(wiki_array[line_num], line);
+      line_num++;
+  }
+  fclose(file);
+  free(line);
 
-    line_num = 0;
-    line = malloc(WORDS_STRING_SIZE);
-    while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
-        line[strcspn(line, "\n")] = 0;
-        strcpy(words_array[line_num], line);
-	      // printf("%s\n", words_array[line_num]);
-        line_num++;
-    }
-    fclose(file);
-    free(line);
+  // printf("Load Memory: %s, %d\n", fileName, line_num);
 
-    printf("Load Memory: %s, %d\n", fileName, line_num);
+  /* Read the words list to memory line by line. */
+  //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
+  fileName = "../../words_4-8chars75";
+  file = fopen(fileName, "r"); /* should check the result */
+
+  if(file == NULL) {
+    printf("fail2");
+    return;
+  }
+
+  /* Read each word line into memory. */
+  line_num = 0;
+  line = malloc(WORDS_STRING_SIZE);
+  while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
+      line[strcspn(line, "\n")] = 0;
+      strcpy(words_array[line_num], line);
+      line_num++;
+  }
+  fclose(file);
+  free(line);
+
+  // printf("Load Memory: %s, %d\n", fileName, line_num);
 }
 
+/* If a given word is present in 1 or more wiki articles, print out the word with the lines number(s) of the assocaited articles. */
 void find_word_in_wiki()
 {
   int i, j;
-  int found_word = 0; // Assume that the words has not been found (false).
+  int found_word = 0; // Assume that the word has not been found (false).
 
   for(i = 0; i < WORDS_ARRAY_SIZE; i++)
   {
-    found_word = 0;
+    found_word = 0; // Assume that the word has not been found (false).
     for(j = 0; j < WIKI_ARRAY_SIZE; j++)
     {
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
+        // If this is the first time that the word has been found...
         if (found_word == 0)
         {
-          found_word = 1; // Set found_word to true.
-          printf("%s: %d", words_array[i], j);
+          // Set found_word to true. Print out the word alongside its line number.
+          found_word = 1;
+          printf("%s: %d", words_array[i], j + 1);
         }
+        // Else, the word has been found before. Append it to the existing string.
         else
         {
-          printf(", %d", j);
+          printf(", %d", j + 1);
         }
       }
     }
-    if (found_word) printf("\n");
+    if (found_word) printf("\n"); // Get ready for the next word by adding a newline.
   }
 }
 
@@ -91,7 +104,7 @@ int main() {
 
 	gettimeofday(&t1, NULL);
 
-	//DO PROCESSING HERE
+	// Read file into memory and print out all of the found words.
 	read_to_memory();
 	find_word_in_wiki();
 
