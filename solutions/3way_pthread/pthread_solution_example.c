@@ -1,7 +1,10 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+
+#define NUM_THREADS 4
 
 #define WIKI_ARRAY_SIZE 50 /* The number of wiki entries. Should be 1000000 for production. */
 #define WIKI_STRING_SIZE 2003 /* The number of characters in each wiki entry. Must account for newline and terminating characters. */
@@ -24,7 +27,7 @@ void read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
   //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
-  char *fileName = "../../wiki.50short";
+  char *fileName = "/homes/cjhughes255/project4/wiki.50short";
   FILE* file = fopen(fileName, "r"); /* should check the result */
 
   if(file == NULL) {
@@ -46,7 +49,7 @@ void read_to_memory()
 
   /* Read the words list to memory line by line. */
   //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
-  fileName = "../../words_4-8chars75";
+  fileName = "/homes/cjhughes255/project4/words_4-8chars75";
   file = fopen(fileName, "r"); /* should check the result */
 
   if(file == NULL) {
