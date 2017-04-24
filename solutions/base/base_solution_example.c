@@ -24,7 +24,7 @@ void read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
   //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
-  char *fileName = "../../wiki.50short";
+  char *fileName = "/homes/cjhughes255/project4/wiki.50short";
   FILE* file = fopen(fileName, "r"); /* should check the result */
 
   if(file == NULL) {
@@ -46,7 +46,7 @@ void read_to_memory()
 
   /* Read the words list to memory line by line. */
   //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
-  fileName = "../../words_4-8chars75";
+  fileName = "/homes/cjhughes255/project4/words_4-8chars75";
   file = fopen(fileName, "r"); /* should check the result */
 
   if(file == NULL) {
