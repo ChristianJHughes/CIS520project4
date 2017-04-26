@@ -17,11 +17,6 @@ char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 /* Results of the word search*/
 int results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
-/* For measuring performance. */
-struct timeval t1, t2;
-double elapsedTime;
-int numSlots, line_num, myVersion = 1;
-
 /* Initialize the results array to all zero */
 void init_array()
 {
@@ -62,7 +57,7 @@ void read_to_memory()
   // printf("Load Memory: %s, %d\n", fileName, line_num);
 
   /* Read the words list to memory line by line. */
-  //*fileName = "../../../../../scratch/dan/words_4-8chars_50k";
+  //fileName = "../../../../../scratch/dan/words_4-8chars_50k";
   fileName = "/homes/cjhughes255/project4/words_4-8chars75";
   file = fopen(fileName, "r"); /* should check the result */
 
@@ -90,9 +85,9 @@ void find_word_in_wiki()
 {
   int i, j;
 
-  for(i = 0; i < WORDS_ARRAY_SIZE; i++)
+  for(j = 0; j < WIKI_ARRAY_SIZE; j++)
   {
-    for(j = 0; j < WIKI_ARRAY_SIZE; j++)
+    for(i = 0; i < WORDS_ARRAY_SIZE; i++)
     {
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
@@ -136,7 +131,11 @@ void print_results()
 }
 
 int main() {
-
+  /* For measuring performance. */
+  struct timeval t1, t2;
+  double elapsedTime;
+  int numSlots, myVersion = 1;
+  
   init_array();
   gettimeofday(&t1, NULL);
   
