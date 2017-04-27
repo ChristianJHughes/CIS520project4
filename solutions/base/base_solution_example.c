@@ -15,19 +15,19 @@ char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
-int results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
 /* Initialize the results array to all zero */
 void init_array()
 {
   int i, j;
-  
+
   for(i = 0; i < WORDS_ARRAY_SIZE; i++)
     {
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
-	{
-	  results_array[i][j] = 0;
-	}
+  {
+    results_array[i][j] = 'f';
+    }
     }
 }
 
@@ -35,7 +35,7 @@ void init_array()
 int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
-  //FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
+  // char *fileName = "/homes/cjhughes255/project4/wiki.50short";
   // FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
   FILE *file = fopen("../../wiki.50short", "r");
 
@@ -54,7 +54,7 @@ int read_to_memory()
   fclose(file);
 
   /* Read the words list to memory line by line. */
-  //file = fopen("/scratch/dan/words_4-8chars_50k", "r");
+  // file = fopen("/scratch/dan/words_4-8chars_50k", "r");
   // file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
   file = fopen("../../words_4-8chars75", "r");
   if(file == NULL) {
@@ -86,8 +86,8 @@ void find_word_in_wiki()
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
-	results_array[i][j] = 1;
-      }
+  results_array[i][j] = 't';
+  }
     }
   }
 }
@@ -95,43 +95,48 @@ void find_word_in_wiki()
 void print_results()
 {
   int i, j, found_word;
-  
+
   for(i = 0; i < WORDS_ARRAY_SIZE; i++)
     {
       found_word = 0;
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
-	{
-	  if(results_array[i][j] == 1)
-	    {
-	      // If this is the first time that the word has been found...
-	      if (found_word == 0)
-		{
-		  // Set found_word to true. Print out the word alongside its line number.
-		  found_word = 1;
-		  printf("%s: %d", words_array[i], j + 1);
-		}
-	      // Else, the word has been found before. Append it to the existing string.
-	      else
-		{
-		  printf(", %d", j + 1);
-		}
-	    }
-	}
+  {
+
+    if(results_array[i][j] == 't')
+    {
+        // If this is the first time that the word has been found...
+        if (found_word == 0)
+    {
+      // Set found_word to true. Print out the word alongside its line number.
+      found_word = 1;
+      printf("%s: %d", words_array[i], j + 1);
+    }
+        // Else, the word has been found before. Append it to the existing string.
+        else
+    {
+      printf(", %d", j + 1);
+    }
+      }
+  }
       if(found_word == 1)
-	{
-	  printf("\n");
-	}
+  {
+    printf("\n");
+  }
     }
 }
 
 int main() {
   /* For measuring performance. */
-  struct timeval t1, t2, t3, t4;
+  struct timeval t1, t2, t3, t4, t5;
   double elapsedTime;
   int numSlots, myVersion = 1;
 
+  gettimeofday(&t5, NULL);
   init_array();
   gettimeofday(&t1, NULL);
+  elapsedTime = (t1.tv_sec - t5.tv_sec) * 1000.0; //sec to ms
+  elapsedTime += (t1.tv_usec - t5.tv_usec) / 1000.0; // us to ms
+  printf("Time to Init Array: %f\n", elapsedTime);
 
   // Read file into memory and print out all of the found words.
   if (read_to_memory() == 0) {
