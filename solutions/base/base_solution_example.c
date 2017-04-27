@@ -15,21 +15,10 @@ char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
-int results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
-/* Initialize the results array to all zero */
-void init_array()
-{
-  int i, j;
-  
-  for(i = 0; i < WORDS_ARRAY_SIZE; i++)
-    {
-      for(j= 0; j < WIKI_ARRAY_SIZE; j++)
-	{
-	  results_array[i][j] = 0;
-	}
-    }
-}
+/* Number of words to print */
+int count = 0;
 
 /* Read all of the wiki entries and words into local data structures from thier resprctive files. */
 int read_to_memory()
@@ -64,9 +53,9 @@ int read_to_memory()
   /* Read each word line into memory. */
   line_num = 0;
   char line2[WORDS_STRING_SIZE];
-  while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
-      line[strcspn(line, "\n")] = 0;
-      strcpy(words_array[line_num], line);
+  while (fgets(line2, WORDS_STRING_SIZE, file) != NULL) {
+      line2[strcspn(line2, "\n")] = 0;
+      strcpy(words_array[line_num], line2);
       line_num++;
   }
   fclose(file);
@@ -75,18 +64,31 @@ int read_to_memory()
 /* If a given word is present in 1 or more wiki articles, print out the word with the lines number(s) of the assocaited articles. */
 void find_word_in_wiki()
 {
-  int i, j;
-
-  for(j = 0; j < WIKI_ARRAY_SIZE; j++)
-  {
-    for(i = 0; i < WORDS_ARRAY_SIZE; i++)
-    {
+  int i, j, found_word;
+  char string[10000];
+  char temp[10];
+  
+  for(i = 0; i < WORDS_ARRAY_SIZE; i++) {
+    found_word = 0;
+    for(j = 0; j < WIKI_ARRAY_SIZE; j++) {
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
-	results_array[i][j] = 1;
+	if (found_word == 0) {
+	  found_word = 1;
+	  sprintf(string, "%s: %d", words_array[i], j+1);
+	}
+	else {
+	  sprintf(temp, ", %d", j+1);
+	  strncat(string, temp, 10);
+	}
       }
     }
+    if(found_word == 1)
+      {
+	strcpy(results_array[count], string);
+	count++;
+      }
   }
 }
 
@@ -94,31 +96,9 @@ void print_results()
 {
   int i, j, found_word;
   
-  for(i = 0; i < WORDS_ARRAY_SIZE; i++)
+  for(i = 0; i < count; i++)
     {
-      found_word = 0;
-      for(j= 0; j < WIKI_ARRAY_SIZE; j++)
-	{
-	  if(results_array[i][j] == 1)
-	    {
-	      // If this is the first time that the word has been found...
-	      if (found_word == 0)
-		{
-		  // Set found_word to true. Print out the word alongside its line number.
-		  found_word = 1;
-		  printf("%s: %d", words_array[i], j + 1);
-		}
-	      // Else, the word has been found before. Append it to the existing string.
-	      else
-		{
-		  printf(", %d", j + 1);
-		}
-	    }
-	}
-      if(found_word == 1)
-	{
-	  printf("\n");
-	}
+      printf("%s\n", results_array[i]);
     }
 }
 
@@ -128,7 +108,6 @@ int main() {
   double elapsedTime;
   int numSlots, myVersion = 1;
 
-  init_array();
   gettimeofday(&t1, NULL);
 
   // Read file into memory and print out all of the found words.
