@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <stdbool.h>
 
 #define WIKI_ARRAY_SIZE 1000000 /* The number of wiki entries. Should be 1000000 for production. */
 #define WIKI_STRING_SIZE 2003 /* The number of characters in each wiki entry. Must account for newline and terminating characters. */
@@ -15,7 +16,7 @@ char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
-int results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+bool results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
 /* Initialize the results array to all zero */
 void init_array()
@@ -26,7 +27,7 @@ void init_array()
     {
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
-    results_array[i][j] = 0;
+    results_array[i][j] = false;
   }
     }
 }
@@ -86,7 +87,7 @@ void find_word_in_wiki()
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
-  results_array[i][j] = 1;
+        results_array[i][j] = true;
       }
     }
   }
@@ -101,7 +102,7 @@ void print_results()
       found_word = 0;
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
-    if(results_array[i][j] == 1)
+    if(results_array[i][j] == true)
       {
         // If this is the first time that the word has been found...
         if (found_word == 0)
@@ -139,7 +140,7 @@ int main() {
     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
     printf("Time to read: %f\n", elapsedTime);
-    find_word_in_wiki();
+    // find_word_in_wiki();
 
     gettimeofday(&t3, NULL);
     elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
