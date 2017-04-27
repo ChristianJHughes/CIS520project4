@@ -36,7 +36,8 @@ int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
   //FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
-  FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
+  // FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
+  FILE *file = fopen("../../wiki.50short", "r");
 
   if(file == NULL) {
     printf("fail");
@@ -54,8 +55,8 @@ int read_to_memory()
 
   /* Read the words list to memory line by line. */
   //file = fopen("/scratch/dan/words_4-8chars_50k", "r");
-  file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
-
+  // file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
+  file = fopen("../../words_4-8chars75", "r");
   if(file == NULL) {
     printf("fail2");
     return -1;
@@ -64,12 +65,13 @@ int read_to_memory()
   /* Read each word line into memory. */
   line_num = 0;
   char line2[WORDS_STRING_SIZE];
-  while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
-      line[strcspn(line, "\n")] = 0;
-      strcpy(words_array[line_num], line);
+  while (fgets(line2, WORDS_STRING_SIZE, file) != NULL) {
+      line2[strcspn(line2, "\n")] = 0;
+      strcpy(words_array[line_num], line2);
       line_num++;
   }
   fclose(file);
+  return 0;
 }
 
 /* If a given word is present in 1 or more wiki articles, print out the word with the lines number(s) of the assocaited articles. */
@@ -147,7 +149,7 @@ int main() {
     print_results();
   }
   else {
-    return;
+    return -1;
   }
   gettimeofday(&t4, NULL);
 
