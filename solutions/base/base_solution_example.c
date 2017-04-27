@@ -32,52 +32,44 @@ void init_array()
 }
 
 /* Read all of the wiki entries and words into local data structures from thier resprctive files. */
-void read_to_memory()
+int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
-  //char *fileName = "../../../../../scratch/dan/wiki.1Mshort";
-  char *fileName = "/homes/cjhughes255/project4/wiki.50short";
-  FILE* file = fopen(fileName, "r"); /* should check the result */
+  //FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
+  FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
 
   if(file == NULL) {
     printf("fail");
-    return;
+    return -1;
   }
 
   /* Read each wiki line into memory. */
   int line_num = 0;
-  char * line = malloc(WIKI_STRING_SIZE);
+  char line[WIKI_STRING_SIZE];
   while(fgets(line, WIKI_STRING_SIZE, file) != NULL) {
       strcpy(wiki_array[line_num], line);
       line_num++;
   }
   fclose(file);
-  free(line);
-
-  // printf("Load Memory: %s, %d\n", fileName, line_num);
 
   /* Read the words list to memory line by line. */
-  //fileName = "../../../../../scratch/dan/words_4-8chars_50k";
-  fileName = "/homes/cjhughes255/project4/words_4-8chars75";
-  file = fopen(fileName, "r"); /* should check the result */
+  //file = fopen("/scratch/dan/words_4-8chars_50k", "r");
+  file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
 
   if(file == NULL) {
     printf("fail2");
-    return;
+    return -1;
   }
 
   /* Read each word line into memory. */
   line_num = 0;
-  line = malloc(WORDS_STRING_SIZE);
+  char line2[WORDS_STRING_SIZE];
   while (fgets(line, WORDS_STRING_SIZE, file) != NULL) {
       line[strcspn(line, "\n")] = 0;
       strcpy(words_array[line_num], line);
       line_num++;
   }
   fclose(file);
-  free(line);
-
-  // printf("Load Memory: %s, %d\n", fileName, line_num);
 }
 
 /* If a given word is present in 1 or more wiki articles, print out the word with the lines number(s) of the assocaited articles. */
@@ -132,21 +124,34 @@ void print_results()
 
 int main() {
   /* For measuring performance. */
-  struct timeval t1, t2;
+  struct timeval t1, t2, t3, t4;
   double elapsedTime;
   int numSlots, myVersion = 1;
-  
+
   init_array();
   gettimeofday(&t1, NULL);
-  
+
   // Read file into memory and print out all of the found words.
-  read_to_memory();
-  find_word_in_wiki();
-  print_results();
-  
-  gettimeofday(&t2, NULL);
-  
-  elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
-  elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+  if (read_to_memory() == 0) {
+    gettimeofday(&t2, NULL);
+    elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+    elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+    printf("Time to read: %f\n", elapsedTime);
+    find_word_in_wiki();
+
+    gettimeofday(&t3, NULL);
+    elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
+    elapsedTime += (t3.tv_usec - t2.tv_usec) / 1000.0; // us to ms
+    printf("Time to search: %f\n", elapsedTime);
+
+    print_results();
+  }
+  else {
+    return;
+  }
+  gettimeofday(&t4, NULL);
+
+  elapsedTime = (t4.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+  elapsedTime += (t4.tv_usec - t1.tv_usec) / 1000.0; // us to ms
   printf("DATA, %d, %s, %f\n", myVersion, getenv("NSLOTS"),  elapsedTime);
 }
