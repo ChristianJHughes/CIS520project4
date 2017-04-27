@@ -144,7 +144,7 @@ int main() {
     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
     printf("Time to read: %f\n", elapsedTime);
-    // find_word_in_wiki();
+    find_word_in_wiki();
 
     gettimeofday(&t3, NULL);
     elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
