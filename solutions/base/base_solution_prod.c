@@ -27,7 +27,7 @@ void init_array()
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
     results_array[i][j] = 'f';
-  }
+    }
     }
 }
 
@@ -87,7 +87,7 @@ void find_word_in_wiki()
       if(p)
       {
   results_array[i][j] = 't';
-      }
+  }
     }
   }
 }
@@ -101,8 +101,9 @@ void print_results()
       found_word = 0;
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
+
     if(results_array[i][j] == 't')
-      {
+    {
         // If this is the first time that the word has been found...
         if (found_word == 0)
     {
@@ -143,7 +144,7 @@ int main() {
     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
     printf("Time to read: %f\n", elapsedTime);
-    find_word_in_wiki();
+    // find_word_in_wiki();
 
     gettimeofday(&t3, NULL);
     elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
