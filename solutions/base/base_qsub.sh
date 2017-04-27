@@ -1,2 +1,2 @@
 #!/bin/bash
-/homes/kkristia/project4/solutions/base/example.out
+/homes/mhixon/project4/solutions/base/prod.out

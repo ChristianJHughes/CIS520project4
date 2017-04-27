@@ -15,7 +15,7 @@ char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
-int results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
 /* Initialize the results array to all zero */
 void init_array()
@@ -26,7 +26,7 @@ void init_array()
     {
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
-    results_array[i][j] = 0;
+    results_array[i][j] = 'f';
   }
     }
 }
@@ -37,7 +37,7 @@ int read_to_memory()
   /* Read the wiki article into memory line by line. */
   FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
   // FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
-  // FILE *file = fopen("../../wiki.50short", "r");
+  //FILE *file = fopen("../../wiki.50short", "r");
 
   if(file == NULL) {
     printf("fail");
@@ -56,7 +56,7 @@ int read_to_memory()
   /* Read the words list to memory line by line. */
   file = fopen("/scratch/dan/words_4-8chars_50k", "r");
   // file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
-  // file = fopen("../../words_4-8chars75", "r");
+  //file = fopen("../../words_4-8chars75", "r");
   if(file == NULL) {
     printf("fail2");
     return -1;
@@ -86,7 +86,7 @@ void find_word_in_wiki()
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
-  results_array[i][j] = 1;
+  results_array[i][j] = 't';
       }
     }
   }
@@ -101,7 +101,7 @@ void print_results()
       found_word = 0;
       for(j= 0; j < WIKI_ARRAY_SIZE; j++)
   {
-    if(results_array[i][j] == 1)
+    if(results_array[i][j] == 't')
       {
         // If this is the first time that the word has been found...
         if (found_word == 0)
@@ -126,12 +126,16 @@ void print_results()
 
 int main() {
   /* For measuring performance. */
-  struct timeval t1, t2, t3, t4;
+  struct timeval t1, t2, t3, t4, t5;
   double elapsedTime;
   int numSlots, myVersion = 1;
 
+  gettimeofday(&t5, NULL);
   init_array();
   gettimeofday(&t1, NULL);
+  elapsedTime = (t1.tv_sec - t5.tv_sec) * 1000.0; //sec to ms
+  elapsedTime += (t1.tv_usec - t5.tv_usec) / 1000.0; // us to ms
+  printf("Time to Init Array: %f\n", elapsedTime);
 
   // Read file into memory and print out all of the found words.
   if (read_to_memory() == 0) {
