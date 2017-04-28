@@ -15,7 +15,7 @@ char wiki_array[WIKI_ARRAY_SIZE][WIKI_STRING_SIZE];
 char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
-char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+char *results_array[WORDS_ARRAY_SIZE];
 
 /* Number of words to print */
 int count = 0;
@@ -65,7 +65,7 @@ int read_to_memory()
 void find_word_in_wiki()
 {
   int i, j, found_word;
-  char string[10000];
+  char string[2*WIKI_ARRAY_SIZE];
   char temp[10];
   
   for(i = 0; i < WORDS_ARRAY_SIZE; i++) {
@@ -84,8 +84,10 @@ void find_word_in_wiki()
 	}
       }
     }
+    //strncat(string, '\0', 1);
     if(found_word == 1)
       {
+	results_array[count] = malloc(strlen(string) * sizeof(char));
 	strcpy(results_array[count], string);
 	count++;
       }
@@ -99,6 +101,7 @@ void print_results()
   for(i = 0; i < count; i++)
     {
       printf("%s\n", results_array[i]);
+      free(results_array[i]);
     }
 }
 
