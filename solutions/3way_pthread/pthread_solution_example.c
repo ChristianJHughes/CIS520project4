@@ -39,8 +39,8 @@ int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
   // FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
-  // FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
-  FILE *file = fopen("../../wiki.50short", "r");
+  FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
+  //FILE *file = fopen("../../wiki.50short", "r");
 
   if(file == NULL)
   {
@@ -60,8 +60,8 @@ int read_to_memory()
 
   /* Read the words list to memory line by line. */
   // file = fopen("/scratch/dan/words_4-8chars_50k", "r");
-  // file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
-  file = fopen("../../words_4-8chars75", "r");
+  file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
+  //file = fopen("../../words_4-8chars75", "r");
   
   if(file == NULL)
     {
