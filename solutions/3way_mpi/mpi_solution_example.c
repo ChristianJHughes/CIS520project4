@@ -149,13 +149,12 @@ int main(int argc, char* argv[]) {
   /* For measuring performance. */
   struct timeval t1, t2, t3, t4, t5;
   double elapsedTime;
-  int numSlots, myVersion = 2; //pthreads = 2
+  int numSlots, myVersion = 4; //pthreads = 2, openmp = 3, mpi = 4
 
 
   int i, rc;
   // pthread_t threads[num_threads];
   // pthread_attr_t attr;
-  void *status;
 
   int num_tasks, rank;
   MPI_Status status;
@@ -163,9 +162,9 @@ int main(int argc, char* argv[]) {
   /* Initialize and set thread detached attribute */
   rc = MPI_Init(&argc, &argv);
 
-  if(rc == MPI_SUCCESS)
+  if(rc != MPI_SUCCESS)
   {
-    print("error starting MPI program.");
+    printf("error starting MPI program.");
     MPI_Abort(MPI_COMM_WORLD, rc);
   }
 

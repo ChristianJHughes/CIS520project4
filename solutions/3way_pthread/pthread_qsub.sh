@@ -1,2 +1,2 @@
 #!/bin/bash
-/homes/kkristia/project4/solutions/3way-pthread/prod.out
+/homes/mhixon/project4/solutions/3way_pthread/singlethread.out

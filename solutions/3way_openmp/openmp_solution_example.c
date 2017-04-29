@@ -94,7 +94,7 @@ void *find_word_in_wiki()
     myID = omp_get_thread_num();
     startPos = (myID) * (WIKI_ARRAY_SIZE / num_threads);
     endPos = startPos + (WIKI_ARRAY_SIZE / num_threads);
-    if((myID == num_threads-1)
+    if(myID == num_threads-1)
     {
       endPos = WIKI_ARRAY_SIZE;
     }
