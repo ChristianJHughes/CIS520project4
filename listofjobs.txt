@@ -1,0 +1,20 @@
+1 core 8 threads : 2559690
+2 core 8 threads : 2559692
+4 core 8 threads : 2559693
+16 core 8 threads : 2559694
+32 core 8 threads : 2559695
+
+--------------------------
+
+PTHREAD
+1-8 core 1 thread : 2559844-2559849
+1-8 core 2 thread : 2559850-2559855
+1-8 core 4 thread : 2559856-2559861
+1-8 core 8 thread : 2559878-2559883
+1-8 core 16 thread : 2559872-2559877
+1-8 core 24 thread : 2559925-2559930
+
+
+OPENMP
+8 core 2 thread : 2560036
+
