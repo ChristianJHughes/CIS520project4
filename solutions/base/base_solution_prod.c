@@ -36,8 +36,6 @@ int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
   FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
-  // FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
-  //FILE *file = fopen("../../wiki.50short", "r");
 
   if(file == NULL)
   {
@@ -57,8 +55,6 @@ int read_to_memory()
 
   /* Read the words list to memory line by line. */
   file = fopen("/scratch/dan/words_4-8chars_50k", "r");
-  // file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
-  //file = fopen("../../words_4-8chars75", "r");
   if(file == NULL)
   {
     printf("fail2");
@@ -132,7 +128,7 @@ int main() {
   /* For measuring performance. */
   struct timeval t1, t2, t3, t4, t5;
   double elapsedTime;
-  int numSlots, myVersion = 1;
+  int numSlots, myVersion = 1; //base = 1, pthread = 2, openmp = 3, mpi = 4
 
   gettimeofday(&t5, NULL);
   init_array();
@@ -142,7 +138,8 @@ int main() {
   printf("Time to Init Array: %f\n", elapsedTime);
 
   // Read file into memory and print out all of the found words.
-  if (read_to_memory() == 0) {
+  if (read_to_memory() == 0)
+  {
     gettimeofday(&t2, NULL);
     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms

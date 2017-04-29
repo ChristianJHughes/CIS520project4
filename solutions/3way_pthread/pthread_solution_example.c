@@ -38,9 +38,7 @@ void init_array()
 int read_to_memory()
 {
   /* Read the wiki article into memory line by line. */
-  // FILE *file = fopen("/scratch/dan/wiki.1Mshort", "r");
   FILE *file = fopen("/homes/cjhughes255/project4/wiki.50short", "r");
-  //FILE *file = fopen("../../wiki.50short", "r");
 
   if(file == NULL)
   {
@@ -59,9 +57,7 @@ int read_to_memory()
   fclose(file);
 
   /* Read the words list to memory line by line. */
-  // file = fopen("/scratch/dan/words_4-8chars_50k", "r");
   file = fopen("/homes/cjhughes255/project4/words_4-8chars75", "r");
-  //file = fopen("../../words_4-8chars75", "r");
   
   if(file == NULL)
     {
@@ -147,7 +143,7 @@ int main()
   /* For measuring performance. */
   struct timeval t1, t2, t3, t4, t5;
   double elapsedTime;
-  int numSlots, myVersion = 2; //pthreads = 2
+  int numSlots, myVersion = 2; //base = 1, pthreads = 2, openmp = 3, mpi = 4
 
 
   int i, rc;
