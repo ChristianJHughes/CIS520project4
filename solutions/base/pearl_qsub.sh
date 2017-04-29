@@ -1,2 +1,2 @@
 #!/bin/bash
-/homes/kkristia/project4/solutions/base/perl_sample.pl
+/scratch/dan/hack_wiki.pl
