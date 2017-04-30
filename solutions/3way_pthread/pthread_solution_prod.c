@@ -18,7 +18,7 @@ char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 /* Results of the word search*/
 char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
-int num_threads = 24;
+int num_threads = 32;
 
 /* Initialize the results array to all zero */
 void init_array()

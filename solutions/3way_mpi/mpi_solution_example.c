@@ -168,10 +168,9 @@ int main(int argc, char* argv[]) {
     gettimeofday(&t1, NULL);
     init_array();
     gettimeofday(&t2, NULL);
+    read_to_memory();
   }
 
-  if(read_to_memory() == 0)
-  {
     gettimeofday(&t3, NULL);
     MPI_Bcast(wiki_array, WIKI_ARRAY_SIZE*WIKI_STRING_SIZE, MPI_CHAR, 0, MPI_COMM_WORLD);
     find_word_in_wiki(&rank);
@@ -182,11 +181,6 @@ int main(int argc, char* argv[]) {
       print_results();
     }
     MPI_Finalize();
-  }
-  else
-  {
-    return -1;
-  }
   gettimeofday(&t5, NULL);
  
   elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
