@@ -18,7 +18,7 @@ char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 /* Results of the word search*/
 char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
-int num_threads = 2;
+int num_threads = 4;
 
 /* Initialize the results array to all zero */
 void init_array()
@@ -90,7 +90,7 @@ void *find_word_in_wiki()
     myID = omp_get_thread_num();
     startPos = (myID) * (WIKI_ARRAY_SIZE / num_threads);
     endPos = startPos + (WIKI_ARRAY_SIZE / num_threads);
-    if((myID == num_threads-1)
+    if(myID == num_threads-1)
     {
       endPos = WIKI_ARRAY_SIZE;
     }
