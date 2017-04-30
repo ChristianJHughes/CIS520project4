@@ -17,6 +17,7 @@ char words_array[WORDS_ARRAY_SIZE][WORDS_STRING_SIZE];
 
 /* Results of the word search*/
 char results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
+char local_results_array[WORDS_ARRAY_SIZE][WIKI_ARRAY_SIZE];
 
 int num_threads;
 
@@ -30,6 +31,7 @@ void init_array()
     for(j= 0; j < WIKI_ARRAY_SIZE; j++)
     {
       results_array[i][j] = 'f';
+      local_results_array[i][j] = 'f';
     }
   }
 }
@@ -87,6 +89,7 @@ void *find_word_in_wiki(void *rank)
   int startPos = ((long) myID) * (WIKI_ARRAY_SIZE / num_threads);
   int endPos = startPos + (WIKI_ARRAY_SIZE / num_threads);
 
+  
   if(myID == num_threads-1)
   {
     endPos = WIKI_ARRAY_SIZE;
@@ -99,7 +102,7 @@ void *find_word_in_wiki(void *rank)
       char *p = strstr(wiki_array[j], words_array[i]);
       if(p)
       {
-        results_array[i][j] = 't';
+        local_results_array[i][j] = 't';
       }
     }
   }
@@ -163,47 +166,54 @@ int main(int argc, char* argv[]) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   num_threads = num_tasks;
+  
+  gettimeofday(&t1, NULL);
   if(rank == 0)
   {
-    gettimeofday(&t1, NULL);
     init_array();
-    gettimeofday(&t2, NULL);
   }
-
+  gettimeofday(&t2, NULL);
+  
   if(read_to_memory() == 0)
   {
     gettimeofday(&t3, NULL);
+
     MPI_Bcast(wiki_array, WIKI_ARRAY_SIZE*WIKI_STRING_SIZE, MPI_CHAR, 0, MPI_COMM_WORLD);
     find_word_in_wiki(&rank);
     gettimeofday(&t4, NULL);
+
+    MPI_Reduce(local_results_array, results_array, WIKI_ARRAY_SIZE*WORDS_ARRAY_SIZE, MPI_CHAR, MPI_SUM, 0, MPI_COMM_WORLD);
     
     if(rank == 0)
     {
       print_results();
+
+      gettimeofday(&t5, NULL);
+      
+      elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+      elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+      printf("Time to Init Array: %f\n", elapsedTime);
+      
+      elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
+      elapsedTime += (t3.tv_usec - t2.tv_usec) / 1000.0; // us to ms
+      printf("Time to read: %f\n", elapsedTime);
+      
+      elapsedTime = (t4.tv_sec - t3.tv_sec) * 1000.0; //sec to ms
+      elapsedTime += (t4.tv_usec - t3.tv_usec) / 1000.0; // us to ms
+      printf("Time to search: %f\n", elapsedTime);
+      
+      elapsedTime = (t5.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+      elapsedTime += (t5.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+      printf("DATA, %d, %s, %f, %d\n", myVersion, getenv("NSLOTS"), elapsedTime, num_threads);
+      
+      printf("Main: program completed. Exiting.\n");
     }
-    MPI_Finalize();
   }
   else
   {
+    MPI_Finalize();
     return -1;
   }
-  gettimeofday(&t5, NULL);
- 
-  elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
-  elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
-  printf("Time to Init Array: %f\n", elapsedTime);
-
-  elapsedTime = (t3.tv_sec - t2.tv_sec) * 1000.0; //sec to ms
-  elapsedTime += (t3.tv_usec - t2.tv_usec) / 1000.0; // us to ms
-  printf("Time to read: %f\n", elapsedTime);
-
-  elapsedTime = (t4.tv_sec - t3.tv_sec) * 1000.0; //sec to ms
-  elapsedTime += (t4.tv_usec - t3.tv_usec) / 1000.0; // us to ms
-  printf("Time to search: %f\n", elapsedTime);
-
-  elapsedTime = (t5.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
-  elapsedTime += (t5.tv_usec - t1.tv_usec) / 1000.0; // us to ms
-  printf("DATA, %d, %s, %f, %d\n", myVersion, getenv("NSLOTS"),  elapsedTime, num_threads);
-  
-  printf("Main: program completed. Exiting.\n");
+  MPI_Finalize();
+  return 0;
 }
